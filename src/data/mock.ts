@@ -2,6 +2,7 @@ import type {
   StockQuote,
   CompanyProfile,
   MarketIndex,
+  ExchangeRate,
   InstitutionalHolding,
   HouseTrading,
   Guru,
@@ -19,6 +20,13 @@ export const marketIndexes: MarketIndex[] = [
     change: 210.23,
   },
   {
+    symbol: "^NYA",
+    name: "NYSE",
+    price: 19245.67,
+    changesPercentage: 0.48,
+    change: 91.35,
+  },
+  {
     symbol: "^KS11",
     name: "코스피",
     price: 2687.45,
@@ -31,6 +39,31 @@ export const marketIndexes: MarketIndex[] = [
     price: 868.23,
     changesPercentage: 0.56,
     change: 4.83,
+  },
+];
+
+// ─── Exchange Rate & Commodities ────────────────────────────────
+export const sidebarExtras: ExchangeRate[] = [
+  {
+    pair: "USD/KRW",
+    name: "달러/원",
+    rate: 1382.5,
+    change: 3.2,
+    changesPercentage: 0.23,
+  },
+  {
+    pair: "XAU/USD",
+    name: "금 (oz)",
+    rate: 2935.4,
+    change: 18.6,
+    changesPercentage: 0.64,
+  },
+  {
+    pair: "XAG/USD",
+    name: "은 (oz)",
+    rate: 32.85,
+    change: -0.42,
+    changesPercentage: -1.26,
   },
 ];
 

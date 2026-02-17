@@ -77,6 +77,14 @@ export interface HouseTrading {
   link: string;
 }
 
+export interface ExchangeRate {
+  pair: string;
+  name: string;
+  rate: number;
+  change: number;
+  changesPercentage: number;
+}
+
 export type GuruType = "institutional" | "congress" | "pension";
 
 export interface Guru {
