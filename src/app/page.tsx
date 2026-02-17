@@ -1,4 +1,4 @@
-import { gurus, usStocks, krStocks, usSectors, krSectors } from "@/data/mock";
+import { gurus, usStocks, krStocks, kosdaqStocks, usSectors, krSectors } from "@/data/mock";
 import GuruCard from "@/components/guru/GuruCard";
 import RankingList from "@/components/stock/RankingList";
 import SectorTabs from "@/components/sector/SectorTabs";
@@ -26,7 +26,7 @@ export default function Home() {
           <Trophy size={20} className="text-foreground" />
           <h2 className="text-lg font-semibold text-foreground">시총 Top 30</h2>
         </div>
-        <RankingList usStocks={usStocks} krStocks={krStocks} />
+        <RankingList usStocks={usStocks} krStocks={krStocks} kosdaqStocks={kosdaqStocks} />
       </section>
 
       {/* 섹션 3: 섹터별 순위 */}
