@@ -1,7 +1,7 @@
 import { gurus, usStocks, krStocks, sectors } from "@/data/mock";
 import GuruCard from "@/components/guru/GuruCard";
 import RankingList from "@/components/stock/RankingList";
-import SectorCard from "@/components/sector/SectorCard";
+import SectorTabs from "@/components/sector/SectorTabs";
 import { Wallet, Trophy, Flame } from "lucide-react";
 
 export default function Home() {
@@ -35,11 +35,7 @@ export default function Home() {
           <Flame size={20} className="text-foreground" />
           <h2 className="text-lg font-semibold text-foreground">지금 뜨는 섹터</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {sectors.map((sector) => (
-            <SectorCard key={sector.id} sector={sector} />
-          ))}
-        </div>
+        <SectorTabs sectors={sectors} />
       </section>
     </div>
   );
