@@ -1463,62 +1463,89 @@ function pickUs(symbol: string): StockQuote {
   return usStocks.find((s) => s.symbol === symbol)!;
 }
 
-// ─── GICS 11 Sectors ────────────────────────────────────────────
-export const sectors: Sector[] = [
+// ─── GICS 11 Sectors (미국/한국 분리, 시가총액 순 정렬) ─────────
+function byMarketCap(a: StockQuote, b: StockQuote) {
+  return b.marketCap - a.marketCap;
+}
+
+export const usSectors: Sector[] = [
   {
     id: "information-technology",
     name: "정보기술",
-    stocks: [pickUs("AAPL"), pickUs("MSFT"), pickUs("NVDA"), pickUs("AVGO"), pickUs("ADBE")],
+    stocks: [pickUs("AAPL"), pickUs("MSFT"), pickUs("NVDA"), pickUs("AVGO"), pickUs("ADBE"), pickUs("CRM"), pickUs("AMD")].sort(byMarketCap),
   },
   {
     id: "health-care",
     name: "헬스케어",
-    stocks: [pickUs("UNH"), pickUs("LLY"), pickUs("JNJ"), pickUs("MRK"), pickUs("ABBV")],
+    stocks: [pickUs("UNH"), pickUs("LLY"), pickUs("JNJ"), pickUs("MRK"), pickUs("ABBV"), pickUs("TMO")].sort(byMarketCap),
   },
   {
     id: "financials",
     name: "금융",
-    stocks: [pickUs("JPM"), pickUs("V"), pickUs("MA"), pickUs("BAC"), pickKr("105560")],
+    stocks: [pickUs("JPM"), pickUs("V"), pickUs("MA"), pickUs("BAC")].sort(byMarketCap),
   },
   {
     id: "consumer-discretionary",
     name: "경기소비재",
-    stocks: [pickUs("AMZN"), pickUs("TSLA"), pickUs("HD"), pickKr("005380"), pickKr("000270")],
+    stocks: [pickUs("AMZN"), pickUs("TSLA"), pickUs("HD"), pickUs("COST")].sort(byMarketCap),
   },
   {
     id: "communication-services",
     name: "커뮤니케이션",
-    stocks: [pickUs("GOOGL"), pickUs("META"), pickUs("NFLX"), pickKr("035420"), pickKr("035720")],
-  },
-  {
-    id: "industrials",
-    name: "산업재",
-    stocks: [pickKr("012450"), pickKr("034020"), pickKr("012330"), pickKr("028260"), pickKr("011200")],
+    stocks: [pickUs("GOOGL"), pickUs("META"), pickUs("NFLX")].sort(byMarketCap),
   },
   {
     id: "consumer-staples",
     name: "필수소비재",
-    stocks: [pickUs("PG"), pickUs("KO"), pickUs("PEP"), pickUs("COST"), pickUs("WMT")],
+    stocks: [pickUs("PG"), pickUs("KO"), pickUs("PEP"), pickUs("WMT")].sort(byMarketCap),
   },
   {
     id: "energy",
     name: "에너지",
-    stocks: [pickUs("XOM"), pickKr("096770"), pickKr("017670"), pickKr("015760"), pickKr("005490")],
+    stocks: [pickUs("XOM")].sort(byMarketCap),
+  },
+];
+
+export const krSectors: Sector[] = [
+  {
+    id: "information-technology",
+    name: "정보기술",
+    stocks: [pickKr("005930"), pickKr("000660"), pickKr("006400"), pickKr("066570")].sort(byMarketCap),
+  },
+  {
+    id: "health-care",
+    name: "헬스케어",
+    stocks: [pickKr("207940"), pickKr("068270")].sort(byMarketCap),
+  },
+  {
+    id: "financials",
+    name: "금융",
+    stocks: [pickKr("105560"), pickKr("055550"), pickKr("086790"), pickKr("138040"), pickKr("316140"), pickKr("032830")].sort(byMarketCap),
+  },
+  {
+    id: "consumer-discretionary",
+    name: "경기소비재",
+    stocks: [pickKr("005380"), pickKr("000270"), pickKr("012330")].sort(byMarketCap),
+  },
+  {
+    id: "communication-services",
+    name: "커뮤니케이션",
+    stocks: [pickKr("035420"), pickKr("035720"), pickKr("017670")].sort(byMarketCap),
+  },
+  {
+    id: "industrials",
+    name: "산업재",
+    stocks: [pickKr("012450"), pickKr("028260"), pickKr("034020"), pickKr("011200")].sort(byMarketCap),
+  },
+  {
+    id: "energy",
+    name: "에너지",
+    stocks: [pickKr("096770"), pickKr("015760"), pickKr("005490")].sort(byMarketCap),
   },
   {
     id: "materials",
     name: "소재",
-    stocks: [pickKr("051910"), pickKr("003670"), pickKr("010130"), pickKr("006400"), pickKr("373220")],
-  },
-  {
-    id: "utilities",
-    name: "유틸리티",
-    stocks: [pickKr("015760"), pickKr("017670"), pickKr("034020"), pickKr("096770"), pickKr("066570")],
-  },
-  {
-    id: "real-estate",
-    name: "부동산",
-    stocks: [pickKr("028260"), pickKr("032830"), pickKr("105560"), pickKr("055550"), pickKr("086790")],
+    stocks: [pickKr("373220"), pickKr("051910"), pickKr("003670"), pickKr("010130")].sort(byMarketCap),
   },
 ];
 
