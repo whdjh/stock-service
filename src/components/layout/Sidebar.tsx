@@ -8,7 +8,7 @@ export default async function Sidebar() {
   const t = await getTranslations("sidebar");
 
   return (
-    <aside className="w-full lg:w-64 lg:shrink-0 lg:sticky lg:top-6 lg:self-start">
+    <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 lg:self-start">
       <div className="bg-surface rounded-3xl p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">

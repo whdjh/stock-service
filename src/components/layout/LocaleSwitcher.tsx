@@ -20,7 +20,7 @@ export default function LocaleSwitcher() {
         <button
           key={locale}
           onClick={() => switchLocale(locale)}
-          className={`px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
+          className={`w-16 py-1 rounded-lg text-xs font-medium text-center transition-colors ${
             locale === current
               ? "bg-foreground text-white"
               : "bg-gray-100 text-muted hover:bg-gray-200"
