@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { StockQuote } from "@/types";
 import Badge from "@/components/ui/Badge";
+import Tooltip from "@/components/ui/Tooltip";
 
 interface RankingListProps {
   usStocks: StockQuote[];
@@ -18,6 +19,7 @@ export default function RankingList({
   kosdaqStocks,
 }: RankingListProps) {
   const t = useTranslations("common");
+  const tt = useTranslations("tooltip.exchange");
   const [country, setCountry] = useState<"us" | "kr">("us");
   const [usExchange, setUsExchange] = useState<"all" | "NASDAQ" | "NYSE">("all");
   const [krExchange, setKrExchange] = useState<"all" | "KOSPI" | "KOSDAQ">("all");
@@ -70,33 +72,37 @@ export default function RankingList({
         {country === "us" ? (
           <>
             {(["all", "NASDAQ", "NYSE"] as const).map((ex) => (
-              <button
-                key={ex}
-                onClick={() => setUsExchange(ex)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                  usExchange === ex
-                    ? "bg-gray-200 text-foreground"
-                    : "bg-gray-50 text-muted hover:bg-gray-100"
-                }`}
-              >
-                {ex === "all" ? t("all") : ex}
-              </button>
+              <div key={ex} className="flex items-center gap-1">
+                <button
+                  onClick={() => setUsExchange(ex)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                    usExchange === ex
+                      ? "bg-gray-200 text-foreground"
+                      : "bg-gray-50 text-muted hover:bg-gray-100"
+                  }`}
+                >
+                  {ex === "all" ? t("all") : ex}
+                </button>
+                {ex !== "all" && <Tooltip text={tt(ex)} />}
+              </div>
             ))}
           </>
         ) : (
           <>
             {(["all", "KOSPI", "KOSDAQ"] as const).map((ex) => (
-              <button
-                key={ex}
-                onClick={() => setKrExchange(ex)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                  krExchange === ex
-                    ? "bg-gray-200 text-foreground"
-                    : "bg-gray-50 text-muted hover:bg-gray-100"
-                }`}
-              >
-                {ex === "all" ? t("all") : ex}
-              </button>
+              <div key={ex} className="flex items-center gap-1">
+                <button
+                  onClick={() => setKrExchange(ex)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                    krExchange === ex
+                      ? "bg-gray-200 text-foreground"
+                      : "bg-gray-50 text-muted hover:bg-gray-100"
+                  }`}
+                >
+                  {ex === "all" ? t("all") : ex}
+                </button>
+                {ex !== "all" && <Tooltip text={tt(ex)} />}
+              </div>
             ))}
           </>
         )}

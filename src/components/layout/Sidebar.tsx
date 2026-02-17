@@ -3,9 +3,11 @@ import Badge from "@/components/ui/Badge";
 import LocaleSwitcher from "@/components/layout/LocaleSwitcher";
 import { TrendingUp } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import Tooltip from "@/components/ui/Tooltip";
 
 export default async function Sidebar() {
   const t = await getTranslations("sidebar");
+  const ti = await getTranslations("tooltip.index");
 
   return (
     <aside className="w-full lg:w-64 lg:shrink-0">
@@ -22,9 +24,12 @@ export default async function Sidebar() {
         <div className="space-y-3">
           {marketIndexes.map((index) => (
             <div key={index.symbol} className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-foreground">{index.name}</p>
-                <p className="text-xs text-muted">{index.price.toLocaleString()}</p>
+              <div className="flex items-center gap-1">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{index.name}</p>
+                  <p className="text-xs text-muted">{index.price.toLocaleString()}</p>
+                </div>
+                <Tooltip text={ti(index.symbol)} />
               </div>
               <Badge value={index.changesPercentage} />
             </div>

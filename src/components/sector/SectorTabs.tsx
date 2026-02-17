@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Sector } from "@/types";
 import Badge from "@/components/ui/Badge";
+import Tooltip from "@/components/ui/Tooltip";
 
 interface SectorTabsProps {
   usSectors: Sector[];
@@ -50,6 +51,14 @@ export default function SectorTabs({
     return sector.name;
   }
 
+  function getSectorTooltip(sector: Sector): string | null {
+    const key = sectorKeys[sector.id];
+    if (key) {
+      return t(`tooltip.sector.${key}`);
+    }
+    return null;
+  }
+
   return (
     <div>
       {/* Country tabs */}
@@ -78,19 +87,24 @@ export default function SectorTabs({
 
       {/* Sector tabs */}
       <div className="flex gap-2 overflow-x-auto pb-3">
-        {sectors.map((sector) => (
-          <button
-            key={sector.id}
-            onClick={() => setActiveId(sector.id)}
-            className={`shrink-0 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-              sector.id === activeId
-                ? "bg-gray-200 text-foreground"
-                : "bg-gray-50 text-muted hover:bg-gray-100"
-            }`}
-          >
-            {getSectorName(sector)}
-          </button>
-        ))}
+        {sectors.map((sector) => {
+          const tip = getSectorTooltip(sector);
+          return (
+            <div key={sector.id} className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={() => setActiveId(sector.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  sector.id === activeId
+                    ? "bg-gray-200 text-foreground"
+                    : "bg-gray-50 text-muted hover:bg-gray-100"
+                }`}
+              >
+                {getSectorName(sector)}
+              </button>
+              {tip && <Tooltip text={tip} />}
+            </div>
+          );
+        })}
       </div>
 
       {/* Stock list */}
