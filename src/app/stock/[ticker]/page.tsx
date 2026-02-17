@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, TrendingUp, TrendingDown, Building2, Landmark } from "lucide-react";
 import { getCompanyProfile, guruDetails, gurus } from "@/data/mock";
-import Badge from "@/components/ui/Badge";
 import StockMetrics from "@/components/stock/StockMetrics";
 
 interface StockDetailPageProps {
