@@ -1,0 +1,59 @@
+{
+  "common": {
+    "dashboard": "대시보드",
+    "back": "대시보드로 돌아가기",
+    "us": "미국",
+    "kr": "한국",
+    "all": "전체",
+    "buy": "매수",
+    "sell": "매도",
+    "partialSell": "일부 매도",
+    "fullSell": "전량 매도",
+    "perYear": "/yr",
+    "weight": "비중",
+    "shares": "주",
+    "sector": "섹터",
+    "industry": "산업",
+    "exchange": "거래소"
+  },
+  "sidebar": {
+    "title": "오늘의 시장"
+  },
+  "gurus": {
+    "title": "고수들의 지갑"
+  },
+  "ranking": {
+    "title": "시총 Top 30"
+  },
+  "sectors": {
+    "title": "섹터별 순위",
+    "informationTechnology": "정보기술",
+    "healthCare": "헬스케어",
+    "financials": "금융",
+    "consumerDiscretionary": "경기소비재",
+    "communicationServices": "커뮤니케이션",
+    "industrials": "산업재",
+    "consumerStaples": "필수소비재",
+    "energy": "에너지",
+    "materials": "소재",
+    "utilities": "유틸리티",
+    "realEstate": "부동산"
+  },
+  "stockDetail": {
+    "guruChoice": "고수의 선택",
+    "companyInfo": "기업 정보",
+    "marketCap": "시가총액",
+    "per": "PER",
+    "pbr": "PBR",
+    "dividendYield": "배당수익률"
+  },
+  "guruDetail": {
+    "topHoldings": "Top Holdings",
+    "recentActivity": "최근 활동",
+    "congressTrades": "의회 거래 내역"
+  },
+  "metadata": {
+    "title": "Stock Service",
+    "description": "고수들의 포트폴리오와 시장 동향을 한눈에"
+  }
+}

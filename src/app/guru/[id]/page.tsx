@@ -10,6 +10,7 @@ import {
   ArrowDownCircle,
 } from "lucide-react";
 import { getGuruById } from "@/data/mock";
+import { getTranslations } from "next-intl/server";
 import Badge from "@/components/ui/Badge";
 
 interface GuruDetailPageProps {
@@ -30,6 +31,7 @@ function formatValue(value: number): string {
 
 export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
   const { id } = await params;
+  const t = await getTranslations();
   const guru = getGuruById(id);
 
   if (!guru) {
@@ -59,7 +61,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
         className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
       >
         <ArrowLeft size={16} />
-        대시보드로 돌아가기
+        {t("common.back")}
       </Link>
 
       {/* Guru Profile Card */}
@@ -71,7 +73,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl font-bold text-foreground">{guru.name}</h1>
-              <Badge value={guru.returnRate} suffix="% /yr" />
+              <Badge value={guru.returnRate} suffix={`% ${t("common.perYear")}`} />
             </div>
             <p className="text-sm text-muted mt-0.5">{guru.nameEn}</p>
             <p className="text-sm text-muted mt-3 leading-relaxed">
@@ -84,7 +86,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
       {/* Top Holdings */}
       <div className="bg-surface rounded-3xl p-6">
         <h2 className="text-lg font-semibold text-foreground mb-4">
-          Top Holdings
+          {t("guruDetail.topHoldings")}
         </h2>
         <div className="space-y-3">
           {topHoldings.map((holding, i) => (
@@ -132,7 +134,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
       {recentActivity.length > 0 && (
         <div className="bg-surface rounded-3xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            최근 활동
+            {t("guruDetail.recentActivity")}
           </h2>
           <div className="space-y-2">
             {recentActivity.map((holding) => {
@@ -162,11 +164,11 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
                       suffix="%"
                     />
                     <p className="text-xs text-muted mt-1">
-                      {isBuy ? "매수" : "매도"}{" "}
+                      {isBuy ? t("common.buy") : t("common.sell")}{" "}
                       {Math.abs(
                         holding.changeInSharesNumber
                       ).toLocaleString()}
-                      주
+                      {t("common.shares")}
                     </p>
                   </div>
                 </Link>
@@ -176,20 +178,20 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
         </div>
       )}
 
-      {/* Congress Trades (only for Pelosi / congress type with trades) */}
+      {/* Congress Trades (only for congress type with trades) */}
       {guru.trades && guru.trades.length > 0 && (
         <div className="bg-surface rounded-3xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            의회 거래 내역
+            {t("guruDetail.congressTrades")}
           </h2>
           <div className="space-y-2">
             {guru.trades.map((trade, i) => {
               const isPurchase = trade.type === "purchase";
               const typeLabel = isPurchase
-                ? "매수"
+                ? t("common.buy")
                 : trade.type === "sale_full"
-                ? "전량 매도"
-                : "일부 매도";
+                ? t("common.fullSell")
+                : t("common.partialSell");
               return (
                 <Link
                   key={`${trade.symbol}-${trade.transactionDate}-${i}`}

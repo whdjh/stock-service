@@ -1,0 +1,59 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "back": "Back to Dashboard",
+    "us": "US",
+    "kr": "Korea",
+    "all": "All",
+    "buy": "Buy",
+    "sell": "Sell",
+    "partialSell": "Partial Sell",
+    "fullSell": "Full Sell",
+    "perYear": "/yr",
+    "weight": "Weight",
+    "shares": "shares",
+    "sector": "Sector",
+    "industry": "Industry",
+    "exchange": "Exchange"
+  },
+  "sidebar": {
+    "title": "Today's Market"
+  },
+  "gurus": {
+    "title": "Guru's Wallet"
+  },
+  "ranking": {
+    "title": "Market Cap Ranking"
+  },
+  "sectors": {
+    "title": "Sector Ranking",
+    "informationTechnology": "IT",
+    "healthCare": "Healthcare",
+    "financials": "Financials",
+    "consumerDiscretionary": "Consumer Disc.",
+    "communicationServices": "Communication",
+    "industrials": "Industrials",
+    "consumerStaples": "Consumer Staples",
+    "energy": "Energy",
+    "materials": "Materials",
+    "utilities": "Utilities",
+    "realEstate": "Real Estate"
+  },
+  "stockDetail": {
+    "guruChoice": "Guru's Pick",
+    "companyInfo": "Company Info",
+    "marketCap": "Market Cap",
+    "per": "PER",
+    "pbr": "PBR",
+    "dividendYield": "Dividend Yield"
+  },
+  "guruDetail": {
+    "topHoldings": "Top Holdings",
+    "recentActivity": "Recent Activity",
+    "congressTrades": "Congress Trades"
+  },
+  "metadata": {
+    "title": "Stock Service",
+    "description": "Track guru portfolios and market trends at a glance"
+  }
+}
