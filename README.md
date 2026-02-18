@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stock Service
 
-## Getting Started
+주식 정보 대시보드 서비스. 고수(버핏, 펠로시, 국민연금)들의 포트폴리오와 국가별 시총 Top 30, 테마 섹터를 한눈에 확인할 수 있는 웹 앱.
 
-First, run the development server:
+## 기술 스택
+
+- **프레임워크:** Vite 7 + React 18 + TypeScript
+- **라우팅:** React Router v7
+- **스타일링:** Tailwind CSS 3
+- **다국어:** react-i18next (한국어/영어, localStorage 저장)
+- **아이콘:** lucide-react
+- **패키지 매니저:** pnpm
+
+## 시작하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 스크립트
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 명령어 | 설명 |
+|--------|------|
+| `pnpm dev` | 개발 서버 실행 |
+| `pnpm build` | 프로덕션 빌드 |
+| `pnpm preview` | 빌드 결과 미리보기 |
+| `pnpm lint` | ESLint 실행 |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 프로젝트 구조
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── components/
+│   ├── guru/          # 고수 관련 컴포넌트
+│   ├── layout/        # Sidebar, LocaleSwitcher
+│   ├── sector/        # 섹터 관련 컴포넌트
+│   ├── stock/         # 종목 관련 컴포넌트
+│   └── ui/            # 공통 UI (Card, Badge, Button, Tooltip)
+├── data/              # Mock 데이터
+├── i18n/              # 다국어 설정 및 번역 파일
+├── pages/             # 페이지 컴포넌트 (Home, StockDetail, GuruDetail)
+├── types/             # TypeScript 타입 정의
+├── App.tsx            # 라우터 설정 및 레이아웃
+├── main.tsx           # 앱 엔트리포인트
+└── globals.css        # 글로벌 스타일
+```
