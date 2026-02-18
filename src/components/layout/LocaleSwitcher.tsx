@@ -1,17 +1,14 @@
-"use client";
-
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const locales = ["ko", "en"] as const;
 
 export default function LocaleSwitcher() {
-  const current = useLocale();
-  const router = useRouter();
+  const { i18n } = useTranslation();
+  const current = i18n.language;
 
   function switchLocale(locale: string) {
-    document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=31536000`;
-    router.refresh();
+    localStorage.setItem("locale", locale);
+    i18n.changeLanguage(locale);
   }
 
   return (
