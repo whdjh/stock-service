@@ -15,7 +15,8 @@
     "sector": "섹터",
     "industry": "산업",
     "exchange": "거래소",
-    "noData": "데이터 준비 중입니다"
+    "noData": "데이터 준비 중입니다",
+    "others": "기타"
   },
   "sidebar": {
     "title": "오늘의 시장"

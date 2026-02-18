@@ -5,6 +5,7 @@ import { useJsonData } from "@/hooks/useJsonData";
 import { CompanyProfile } from "@/types";
 import { useTranslation } from "react-i18next";
 import StockMetrics from "@/components/stock/StockMetrics";
+import StockPriceChart from "@/components/stock/StockPriceChart";
 
 export default function StockDetailPage() {
   const { ticker } = useParams<{ ticker: string }>();
@@ -89,6 +90,8 @@ export default function StockDetailPage() {
           </div>
         </div>
       </div>
+
+      <StockPriceChart symbol={profile.symbol} />
 
       <StockMetrics profile={profile} />
 

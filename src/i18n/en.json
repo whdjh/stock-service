@@ -15,7 +15,8 @@
     "sector": "Sector",
     "industry": "Industry",
     "exchange": "Exchange",
-    "noData": "Data not available yet"
+    "noData": "Data not available yet",
+    "others": "Others"
   },
   "sidebar": {
     "title": "Today's Market"

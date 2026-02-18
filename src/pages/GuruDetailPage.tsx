@@ -11,6 +11,7 @@ import {
 import { getGuruById } from "@/data/mock";
 import { useTranslation } from "react-i18next";
 import Badge from "@/components/ui/Badge";
+import PortfolioPieChart from "@/components/guru/PortfolioPieChart";
 
 const guruIcons = {
   institutional: Building2,
@@ -72,6 +73,8 @@ export default function GuruDetailPage() {
           </div>
         </div>
       </div>
+
+      <PortfolioPieChart holdings={guru.holdings} />
 
       <div className="bg-surface rounded-3xl p-6 shadow-plastic">
         <h2 className="text-lg font-semibold text-foreground mb-4">
