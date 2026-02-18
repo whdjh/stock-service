@@ -1,4 +1,4 @@
-import { gurus, usStocks, krStocks, kosdaqStocks, usSectors, krSectors } from "@/data/mock";
+import { gurus, krStocks, kosdaqStocks, usSectors, krSectors } from "@/data/mock";
 import { useTranslation } from "react-i18next";
 import GuruCard from "@/components/guru/GuruCard";
 import RankingList from "@/components/stock/RankingList";
@@ -34,7 +34,6 @@ export default function HomePage() {
           </h2>
         </div>
         <RankingList
-          usStocks={usStocks}
           krStocks={krStocks}
           kosdaqStocks={kosdaqStocks}
         />

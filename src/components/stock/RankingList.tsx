@@ -2,17 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { StockQuote } from "@/types";
+import { useJsonData } from "@/hooks/useJsonData";
 import Badge from "@/components/ui/Badge";
 import Tooltip from "@/components/ui/Tooltip";
 
 interface RankingListProps {
-  usStocks: StockQuote[];
   krStocks: StockQuote[];
   kosdaqStocks: StockQuote[];
 }
 
 export default function RankingList({
-  usStocks,
   krStocks,
   kosdaqStocks,
 }: RankingListProps) {
@@ -20,14 +19,20 @@ export default function RankingList({
   const [country, setCountry] = useState<"us" | "kr">("us");
   const [usExchange, setUsExchange] = useState<"all" | "NASDAQ" | "NYSE">("all");
   const [krExchange, setKrExchange] = useState<"all" | "KOSPI" | "KOSDAQ">("all");
+  const { data: usStocks, loading: usLoading } = useJsonData<StockQuote[]>("/data/us-stocks.json");
 
   let stocks: StockQuote[];
   let currency: string;
+  let loading = false;
 
   if (country === "us") {
-    const allUs = usStocks;
-    stocks =
-      usExchange === "all" ? allUs : allUs.filter((s) => s.exchange === usExchange);
+    if (usLoading || !usStocks) {
+      stocks = [];
+      loading = true;
+    } else {
+      stocks =
+        usExchange === "all" ? usStocks : usStocks.filter((s) => s.exchange === usExchange);
+    }
     currency = "$";
   } else {
     const allKr = [...krStocks, ...kosdaqStocks].sort(
@@ -106,30 +111,40 @@ export default function RankingList({
       </div>
 
       {/* Stock list */}
-      <div className="space-y-2">
-        {stocks.map((stock, i) => (
-          <Link
-            key={stock.symbol}
-            to={`/stock/${stock.symbol}`}
-            className="flex items-center justify-between py-3 px-4 bg-surface rounded-2xl hover:shadow-sm transition-shadow"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-muted w-6 text-right">{i + 1}</span>
-              <div>
-                <p className="text-sm font-medium text-foreground">{stock.name}</p>
-                <p className="text-xs text-muted">{stock.symbol}</p>
+      {loading ? (
+        <div className="animate-pulse space-y-2">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 bg-gray-200 rounded-2xl" />
+          ))}
+        </div>
+      ) : stocks.length === 0 ? (
+        <p className="text-sm text-muted py-4 text-center">{t("common.noData")}</p>
+      ) : (
+        <div className="space-y-2">
+          {stocks.map((stock, i) => (
+            <Link
+              key={stock.symbol}
+              to={`/stock/${stock.symbol}`}
+              className="flex items-center justify-between py-3 px-4 bg-surface rounded-2xl hover:shadow-sm transition-shadow"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted w-6 text-right">{i + 1}</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{stock.name}</p>
+                  <p className="text-xs text-muted">{stock.symbol}</p>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-foreground">
-                {currency}
-                {stock.price.toLocaleString()}
-              </p>
-              <Badge value={stock.changesPercentage} />
-            </div>
-          </Link>
-        ))}
-      </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-foreground">
+                  {currency}
+                  {stock.price.toLocaleString()}
+                </p>
+                <Badge value={stock.changesPercentage} />
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

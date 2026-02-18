@@ -1,13 +1,30 @@
 import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, TrendingUp, TrendingDown, Building2, Landmark } from "lucide-react";
-import { getCompanyProfile, guruDetails, gurus } from "@/data/mock";
+import { guruDetails, gurus } from "@/data/mock";
+import { useJsonData } from "@/hooks/useJsonData";
+import { CompanyProfile } from "@/types";
 import { useTranslation } from "react-i18next";
 import StockMetrics from "@/components/stock/StockMetrics";
 
 export default function StockDetailPage() {
   const { ticker } = useParams<{ ticker: string }>();
   const { t } = useTranslation();
-  const profile = ticker ? getCompanyProfile(ticker) : undefined;
+  const { data: profiles, loading } = useJsonData<Record<string, CompanyProfile>>("/data/profiles.json");
+  const profile = profiles?.[ticker ?? ""];
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-200 rounded w-20 mb-6" />
+          <div className="bg-surface rounded-3xl p-6 shadow-plastic">
+            <div className="h-8 bg-gray-200 rounded w-48 mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-32" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!profile) {
     return <Navigate to="/" replace />;

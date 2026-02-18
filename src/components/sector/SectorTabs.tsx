@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Sector } from "@/types";
+import { Sector, StockQuote } from "@/types";
+import { getKrStockBySymbol } from "@/data/mock";
+import { useJsonData } from "@/hooks/useJsonData";
 import Badge from "@/components/ui/Badge";
 import Tooltip from "@/components/ui/Tooltip";
 
@@ -32,6 +34,7 @@ export default function SectorTabs({
   const [country, setCountry] = useState<"us" | "kr">("us");
   const sectors = country === "us" ? usSectors : krSectors;
   const [activeId, setActiveId] = useState(sectors[0]?.id ?? "");
+  const { data: usStocks } = useJsonData<StockQuote[]>("/data/us-stocks.json");
 
   const activeSector = sectors.find((s) => s.id === activeId) ?? sectors[0];
 
@@ -56,6 +59,23 @@ export default function SectorTabs({
     }
     return null;
   }
+
+  function resolveStocks(sector: Sector): StockQuote[] {
+    if (country === "kr") {
+      return sector.symbols
+        .map(getKrStockBySymbol)
+        .filter((s): s is StockQuote => !!s)
+        .sort((a, b) => b.marketCap - a.marketCap);
+    }
+    if (!usStocks) return [];
+    const usMap = new Map(usStocks.map((s) => [s.symbol, s]));
+    return sector.symbols
+      .map((sym) => usMap.get(sym))
+      .filter((s): s is StockQuote => !!s)
+      .sort((a, b) => b.marketCap - a.marketCap);
+  }
+
+  const stocks = activeSector ? resolveStocks(activeSector) : [];
 
   return (
     <div>
@@ -106,9 +126,9 @@ export default function SectorTabs({
       </div>
 
       {/* Stock list */}
-      {activeSector && (
+      {stocks.length > 0 ? (
         <div className="space-y-2">
-          {activeSector.stocks.map((stock, i) => (
+          {stocks.map((stock, i) => (
             <Link
               key={stock.symbol}
               to={`/stock/${stock.symbol}`}
@@ -131,6 +151,8 @@ export default function SectorTabs({
             </Link>
           ))}
         </div>
+      ) : (
+        <p className="text-sm text-muted py-4 text-center">{t("common.noData")}</p>
       )}
     </div>
   );

@@ -99,7 +99,7 @@ export interface Guru {
 export interface Sector {
   id: string;
   name: string;
-  stocks: StockQuote[];
+  symbols: string[];
 }
 
 export interface GuruDetail extends Guru {

@@ -14,7 +14,8 @@
     "shares": "shares",
     "sector": "Sector",
     "industry": "Industry",
-    "exchange": "Exchange"
+    "exchange": "Exchange",
+    "noData": "Data not available yet"
   },
   "sidebar": {
     "title": "Today's Market"
