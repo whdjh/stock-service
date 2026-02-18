@@ -3,28 +3,32 @@
     {
       "symbol": "^GSPC",
       "name": "S&P 500",
-      "price": 6843.22,
-      "change": 7.05
+      "price": 6861.18,
+      "changesPercentage": 0.26245,
+      "change": 17.96
     },
     {
       "symbol": "^IXIC",
       "name": "NASDAQ Composite",
-      "price": 22578.385,
-      "change": 31.715
+      "price": 22636.293,
+      "changesPercentage": 0.25648,
+      "change": 57.9087
     }
   ],
   "extras": [
     {
       "pair": "GCUSD",
       "name": "금 (oz)",
-      "rate": 4980,
-      "change": 74.1
+      "rate": 4978.6,
+      "change": 72.7,
+      "changesPercentage": 1.48189
     },
     {
       "pair": "SIUSD",
       "name": "은 (oz)",
-      "rate": 76.925,
-      "change": 3.385
+      "rate": 76.73,
+      "change": 3.19,
+      "changesPercentage": 4.33778
     }
   ]
 }
