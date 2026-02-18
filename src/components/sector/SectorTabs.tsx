@@ -1,8 +1,6 @@
-"use client";
-
 import { useState } from "react";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Sector } from "@/types";
 import Badge from "@/components/ui/Badge";
 import Tooltip from "@/components/ui/Tooltip";
@@ -30,7 +28,7 @@ export default function SectorTabs({
   usSectors,
   krSectors,
 }: SectorTabsProps) {
-  const t = useTranslations();
+  const { t } = useTranslation();
   const [country, setCountry] = useState<"us" | "kr">("us");
   const sectors = country === "us" ? usSectors : krSectors;
   const [activeId, setActiveId] = useState(sectors[0]?.id ?? "");
@@ -113,7 +111,7 @@ export default function SectorTabs({
           {activeSector.stocks.map((stock, i) => (
             <Link
               key={stock.symbol}
-              href={`/stock/${stock.symbol}`}
+              to={`/stock/${stock.symbol}`}
               className="flex items-center justify-between py-3 px-4 bg-surface rounded-2xl hover:shadow-sm transition-shadow"
             >
               <div className="flex items-center gap-3">

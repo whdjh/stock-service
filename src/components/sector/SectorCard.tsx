@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Sector } from "@/types";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
@@ -18,7 +18,7 @@ export default function SectorCard({ sector }: SectorCardProps) {
           {sector.stocks.slice(0, 5).map((stock) => (
             <Link
               key={stock.symbol}
-              href={`/stock/${stock.symbol}`}
+              to={`/stock/${stock.symbol}`}
               className="flex items-center justify-between py-1 hover:bg-gray-50 rounded-lg px-2 -mx-2 transition-colors"
             >
               <span className="text-sm text-foreground">{stock.name}</span>

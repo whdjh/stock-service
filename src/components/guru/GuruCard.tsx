@@ -1,6 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { Guru } from "@/types";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
@@ -17,13 +15,13 @@ interface GuruCardProps {
 }
 
 export default function GuruCard({ guru }: GuruCardProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const Icon = guruIcons[guru.type] ?? User;
 
   return (
     <Card
       className="min-w-[160px]"
-      onClick={() => router.push(`/guru/${guru.id}`)}
+      onClick={() => navigate(`/guru/${guru.id}`)}
     >
       <div className="flex flex-col items-center text-center gap-2">
         <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">

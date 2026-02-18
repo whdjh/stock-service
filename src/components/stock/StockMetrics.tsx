@@ -1,5 +1,5 @@
 import { CompanyProfile } from "@/types";
-import { getTranslations } from "next-intl/server";
+import { useTranslation } from "react-i18next";
 
 interface StockMetricsProps {
   profile: CompanyProfile;
@@ -12,27 +12,27 @@ function formatMarketCap(value: number): string {
   return value.toLocaleString();
 }
 
-export default async function StockMetrics({ profile }: StockMetricsProps) {
-  const t = await getTranslations("stockDetail");
+export default function StockMetrics({ profile }: StockMetricsProps) {
+  const { t } = useTranslation();
 
   const metrics = [
     {
-      label: t("marketCap"),
+      label: t("stockDetail.marketCap"),
       key: "marketCap" as const,
       format: formatMarketCap,
     },
     {
-      label: t("per"),
+      label: t("stockDetail.per"),
       key: "pe" as const,
       format: (v: number) => v.toFixed(2),
     },
     {
-      label: t("pbr"),
+      label: t("stockDetail.pbr"),
       key: "pbr" as const,
       format: (v: number) => v.toFixed(2),
     },
     {
-      label: t("dividendYield"),
+      label: t("stockDetail.dividendYield"),
       key: "dividend" as const,
       format: (v: number) => `${v.toFixed(2)}%`,
     },

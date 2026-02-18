@@ -1,8 +1,6 @@
-"use client";
-
 import { useState } from "react";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { StockQuote } from "@/types";
 import Badge from "@/components/ui/Badge";
 import Tooltip from "@/components/ui/Tooltip";
@@ -18,8 +16,7 @@ export default function RankingList({
   krStocks,
   kosdaqStocks,
 }: RankingListProps) {
-  const t = useTranslations("common");
-  const tt = useTranslations("tooltip.exchange");
+  const { t } = useTranslation();
   const [country, setCountry] = useState<"us" | "kr">("us");
   const [usExchange, setUsExchange] = useState<"all" | "NASDAQ" | "NYSE">("all");
   const [krExchange, setKrExchange] = useState<"all" | "KOSPI" | "KOSDAQ">("all");
@@ -53,7 +50,7 @@ export default function RankingList({
               : "bg-gray-100 text-muted"
           }`}
         >
-          {t("us")}
+          {t("common.us")}
         </button>
         <button
           onClick={() => setCountry("kr")}
@@ -63,7 +60,7 @@ export default function RankingList({
               : "bg-gray-100 text-muted"
           }`}
         >
-          {t("kr")}
+          {t("common.kr")}
         </button>
       </div>
 
@@ -81,9 +78,9 @@ export default function RankingList({
                       : "bg-gray-50 text-muted hover:bg-gray-100"
                   }`}
                 >
-                  {ex === "all" ? t("all") : ex}
+                  {ex === "all" ? t("common.all") : ex}
                 </button>
-                {ex !== "all" && <Tooltip text={tt(ex)} />}
+                {ex !== "all" && <Tooltip text={t(`tooltip.exchange.${ex}`)} />}
               </div>
             ))}
           </>
@@ -99,9 +96,9 @@ export default function RankingList({
                       : "bg-gray-50 text-muted hover:bg-gray-100"
                   }`}
                 >
-                  {ex === "all" ? t("all") : ex}
+                  {ex === "all" ? t("common.all") : ex}
                 </button>
-                {ex !== "all" && <Tooltip text={tt(ex)} />}
+                {ex !== "all" && <Tooltip text={t(`tooltip.exchange.${ex}`)} />}
               </div>
             ))}
           </>
@@ -113,7 +110,7 @@ export default function RankingList({
         {stocks.map((stock, i) => (
           <Link
             key={stock.symbol}
-            href={`/stock/${stock.symbol}`}
+            to={`/stock/${stock.symbol}`}
             className="flex items-center justify-between py-3 px-4 bg-surface rounded-2xl hover:shadow-sm transition-shadow"
           >
             <div className="flex items-center gap-3">
