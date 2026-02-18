@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Sector, StockQuote } from "@/types";
@@ -35,6 +35,12 @@ export default function SectorTabs({
   const sectors = country === "us" ? usSectors : krSectors;
   const [activeId, setActiveId] = useState(sectors[0]?.id ?? "");
   const { data: usStocks } = useJsonData<StockQuote[]>("/data/us-stocks.json");
+  const { data: krStocksJson } = useJsonData<StockQuote[]>("/data/kr-stocks.json");
+
+  const krStockMap = useMemo(() => {
+    if (!krStocksJson) return null;
+    return new Map(krStocksJson.map((s) => [s.symbol, s]));
+  }, [krStocksJson]);
 
   const activeSector = sectors.find((s) => s.id === activeId) ?? sectors[0];
 
@@ -62,8 +68,9 @@ export default function SectorTabs({
 
   function resolveStocks(sector: Sector): StockQuote[] {
     if (country === "kr") {
+      // JSON 실데이터 우선, 없으면 mock fallback
       return sector.symbols
-        .map(getKrStockBySymbol)
+        .map((sym) => krStockMap?.get(sym) ?? getKrStockBySymbol(sym))
         .filter((s): s is StockQuote => !!s)
         .sort((a, b) => b.marketCap - a.marketCap);
     }

@@ -2,7 +2,7 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, TrendingUp, TrendingDown, Building2, Landmark } from "lucide-react";
 import { guruDetails, gurus } from "@/data/mock";
 import { useJsonData } from "@/hooks/useJsonData";
-import { CompanyProfile } from "@/types";
+import { CompanyProfile, InstitutionalHolding } from "@/types";
 import { useTranslation } from "react-i18next";
 import StockMetrics from "@/components/stock/StockMetrics";
 import StockPriceChart from "@/components/stock/StockPriceChart";
@@ -11,6 +11,7 @@ export default function StockDetailPage() {
   const { ticker } = useParams<{ ticker: string }>();
   const { t } = useTranslation();
   const { data: profiles, loading } = useJsonData<Record<string, CompanyProfile>>("/data/profiles.json");
+  const { data: buffettJson } = useJsonData<InstitutionalHolding[]>("/data/guru-buffett.json");
   const profile = profiles?.[ticker ?? ""];
 
   if (loading) {
@@ -36,11 +37,20 @@ export default function StockDetailPage() {
   const isUp = profile.changesPercentage > 0;
   const isDown = profile.changesPercentage < 0;
 
+  // guru별 holdings: JSON 데이터 우선, 없으면 mock fallback
+  const effectiveHoldings: Record<string, InstitutionalHolding[]> = {};
+  for (const guru of gurus) {
+    if (guru.id === "buffett" && buffettJson && buffettJson.length > 0) {
+      effectiveHoldings[guru.id] = buffettJson;
+    } else {
+      effectiveHoldings[guru.id] = guruDetails[guru.id]?.holdings ?? [];
+    }
+  }
+
   const gurusHoldingStock = gurus
     .map((guru) => {
-      const detail = guruDetails[guru.id];
-      if (!detail) return null;
-      const holding = detail.holdings.find((h) => h.symbol === ticker);
+      const holdings = effectiveHoldings[guru.id] ?? [];
+      const holding = holdings.find((h) => h.symbol === ticker);
       if (!holding) return null;
       return { guru, holding };
     })

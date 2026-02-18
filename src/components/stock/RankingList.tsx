@@ -20,6 +20,7 @@ export default function RankingList({
   const [usExchange, setUsExchange] = useState<"all" | "NASDAQ" | "NYSE">("all");
   const [krExchange, setKrExchange] = useState<"all" | "KOSPI" | "KOSDAQ">("all");
   const { data: usStocks, loading: usLoading } = useJsonData<StockQuote[]>("/data/us-stocks.json");
+  const { data: krStocksJson, loading: krLoading } = useJsonData<StockQuote[]>("/data/kr-stocks.json");
 
   let stocks: StockQuote[];
   let currency: string;
@@ -35,9 +36,19 @@ export default function RankingList({
     }
     currency = "$";
   } else {
-    const allKr = [...krStocks, ...kosdaqStocks].sort(
-      (a, b) => b.marketCap - a.marketCap
-    );
+    // JSON 실데이터 우선, 없으면 mock fallback
+    let allKr: StockQuote[];
+    if (krStocksJson && krStocksJson.length > 0) {
+      allKr = [...krStocksJson].sort((a, b) => b.marketCap - a.marketCap);
+      loading = false;
+    } else if (krLoading) {
+      allKr = [];
+      loading = true;
+    } else {
+      allKr = [...krStocks, ...kosdaqStocks].sort(
+        (a, b) => b.marketCap - a.marketCap
+      );
+    }
     stocks =
       krExchange === "all" ? allKr : allKr.filter((s) => s.exchange === krExchange);
     currency = "\u20A9";

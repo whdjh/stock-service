@@ -9,6 +9,8 @@ import {
   ArrowDownCircle,
 } from "lucide-react";
 import { getGuruById } from "@/data/mock";
+import { useJsonData } from "@/hooks/useJsonData";
+import { InstitutionalHolding, HouseTrading } from "@/types";
 import { useTranslation } from "react-i18next";
 import Badge from "@/components/ui/Badge";
 import PortfolioPieChart from "@/components/guru/PortfolioPieChart";
@@ -28,11 +30,23 @@ function formatValue(value: number): string {
 export default function GuruDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-  const guru = id ? getGuruById(id) : undefined;
+  const mockGuru = id ? getGuruById(id) : undefined;
+  const { data: buffettJson } = useJsonData<InstitutionalHolding[]>("/data/guru-buffett.json");
+  const { data: pelosiJson } = useJsonData<HouseTrading[]>("/data/guru-pelosi.json");
 
-  if (!guru) {
+  if (!mockGuru) {
     return <Navigate to="/" replace />;
   }
+
+  // JSON 데이터가 있으면 사용, 없으면 mock fallback
+  const guru = { ...mockGuru };
+  if (id === "buffett" && buffettJson && buffettJson.length > 0) {
+    guru.holdings = buffettJson;
+  }
+  if (id === "pelosi" && pelosiJson && pelosiJson.length > 0) {
+    guru.trades = pelosiJson;
+  }
+  // nps: mock 유지 (API 없음)
 
   const Icon = guruIcons[guru.type] ?? Building2;
 

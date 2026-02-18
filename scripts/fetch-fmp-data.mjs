@@ -15,6 +15,8 @@ if (!API_KEY) {
   process.exit(1);
 }
 
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function fetchJson(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${res.status}`);
@@ -32,6 +34,31 @@ const US_SYMBOLS = [
   "ABBV","PEP","KO","ADBE","CRM","WMT","BAC","NFLX","TMO","AMD",
 ];
 
+// 한국 주식 심볼 (KOSPI 30 + KOSDAQ 15)
+const KR_KOSPI_SYMBOLS = [
+  "005930.KS","000660.KS","373220.KS","207940.KS","005380.KS",
+  "000270.KS","005490.KS","068270.KS","105560.KS","035420.KS",
+  "055550.KS","051910.KS","006400.KS","086790.KS","012330.KS",
+  "035720.KS","138040.KS","316140.KS","015760.KS","096770.KS",
+  "028260.KS","066570.KS","017670.KS","012450.KS","003670.KS",
+  "033780.KS","034020.KS","032830.KS","010130.KS","011200.KS",
+];
+
+const KR_KOSDAQ_SYMBOLS = [
+  "247540.KQ","086520.KQ","066970.KQ","028300.KQ","196170.KQ",
+  "068760.KQ","058470.KQ","034230.KQ","293490.KQ","263750.KQ",
+  "035760.KQ","253450.KQ","035900.KQ","112040.KQ","108860.KQ",
+];
+
+// 인덱스 이름 매핑 (FMP에서 한국어 이름이 안 올 수 있으므로)
+const INDEX_NAMES = {
+  "^GSPC": "S&P 500",
+  "^IXIC": "나스닥",
+  "^DJI": "다우존스",
+  "^KS11": "코스피",
+  "^KQ11": "코스닥",
+};
+
 async function main() {
   mkdirSync(HIST_DIR, { recursive: true });
   let hasData = false;
@@ -41,13 +68,13 @@ async function main() {
   const indexes = [];
   const extras = [];
 
-  for (const sym of ["^GSPC", "^IXIC", "^NYA", "^KS11", "^KQ11"]) {
+  for (const sym of ["^GSPC", "^IXIC", "^DJI", "^KS11", "^KQ11"]) {
     try {
       const data = await fetchJson(`${BASE}/quote?symbol=${encodeURIComponent(sym)}&apikey=${API_KEY}`);
       const q = Array.isArray(data) ? data[0] : data;
       if (q) indexes.push({
         symbol: q.symbol,
-        name: q.name || q.symbol,
+        name: INDEX_NAMES[sym] || q.name || q.symbol,
         price: q.price,
         changesPercentage: q.changePercentage ?? q.changesPercentage ?? 0,
         change: q.change,
@@ -56,23 +83,29 @@ async function main() {
     } catch (e) {
       console.warn(`  Index ${sym}: SKIP (${e.message})`);
     }
+    await delay(200);
   }
 
-  try {
-    const data = await fetchJson(`${BASE}/quote?symbol=USDKRW&apikey=${API_KEY}`);
-    const q = Array.isArray(data) ? data[0] : data;
-    if (q) extras.push({
-      pair: "USD/KRW",
-      name: "달러/원",
-      rate: q.price,
-      change: q.change,
-      changesPercentage: q.changePercentage ?? q.changesPercentage ?? 0,
-    });
-    console.log("  Forex USDKRW: OK");
-  } catch (e) {
-    console.warn(`  Forex USDKRW: SKIP (${e.message})`);
+  // Forex
+  for (const [sym, pair, name] of [["USDKRW", "USD/KRW", "달러/원"], ["USDJPY", "USD/JPY", "달러/엔"]]) {
+    try {
+      const data = await fetchJson(`${BASE}/quote?symbol=${sym}&apikey=${API_KEY}`);
+      const q = Array.isArray(data) ? data[0] : data;
+      if (q) extras.push({
+        pair,
+        name,
+        rate: q.price,
+        change: q.change,
+        changesPercentage: q.changePercentage ?? q.changesPercentage ?? 0,
+      });
+      console.log(`  Forex ${sym}: OK`);
+    } catch (e) {
+      console.warn(`  Forex ${sym}: SKIP (${e.message})`);
+    }
+    await delay(200);
   }
 
+  // Commodities
   for (const [sym, name] of [["GCUSD", "금 (oz)"], ["SIUSD", "은 (oz)"]]) {
     try {
       const data = await fetchJson(`${BASE}/quote?symbol=${sym}&apikey=${API_KEY}`);
@@ -88,6 +121,7 @@ async function main() {
     } catch (e) {
       console.warn(`  Commodity ${sym}: SKIP (${e.message})`);
     }
+    await delay(200);
   }
 
   if (indexes.length > 0 || extras.length > 0) {
@@ -161,6 +195,7 @@ async function main() {
       } catch (e2) {
         console.error(`  ${sym}: FAILED (${e2.message})`);
       }
+      await delay(200);
     }
     if (usStocks.length > 0) {
       save(join(DATA_DIR, "us-stocks.json"), usStocks);
@@ -213,13 +248,14 @@ async function main() {
     } catch (e) {
       console.error(`  ${sym}: FAILED (${e.message})`);
     }
+    await delay(200);
   }
   if (Object.keys(profiles).length > 0) {
     save(join(DATA_DIR, "profiles.json"), profiles);
     hasData = true;
   }
 
-  // 4. Historical prices (1 year) — historical-price-eod-full
+  // 4. Historical prices (1 year)
   console.log("Fetching historical prices...");
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
@@ -228,9 +264,8 @@ async function main() {
   for (const symbol of US_SYMBOLS) {
     try {
       const hist = await fetchJson(
-        `${BASE}/historical-price-eod-full?symbol=${symbol}&from=${fromDate}&apikey=${API_KEY}`
+        `${BASE}/historical-price-eod/full?symbol=${symbol}&from=${fromDate}&apikey=${API_KEY}`
       );
-      // 응답이 배열이면 { symbol, historical } 형태로 감싸기
       const output = Array.isArray(hist)
         ? { symbol, historical: hist.map((d) => ({ date: d.date, close: d.close })) }
         : { symbol: hist.symbol || symbol, historical: (hist.historical || []).map((d) => ({ date: d.date, close: d.close })) };
@@ -239,6 +274,127 @@ async function main() {
     } catch (e) {
       console.error(`  ${symbol}: FAILED (${e.message})`);
     }
+    await delay(200);
+  }
+
+  // 5. Buffett 13F 데이터 (Berkshire Hathaway CIK: 0001067983)
+  console.log("Fetching Buffett 13F holdings...");
+  try {
+    const data = await fetchJson(
+      `${BASE}/institutional-ownership/extract?cik=0001067983&apikey=${API_KEY}`
+    );
+    const holdings = Array.isArray(data) ? data : [];
+    if (holdings.length > 0) {
+      const mapped = holdings.map((h) => ({
+        date: h.date || h.reportDate || "",
+        filingDate: h.filingDate || "",
+        cik: h.cik || "0001067983",
+        symbol: h.symbol || h.ticker || "",
+        nameOfIssuer: h.nameOfIssuer || h.securityName || h.companyName || "",
+        shares: h.shares || h.sharesNumber || 0,
+        titleOfClass: h.titleOfClass || h.securityType || "COM",
+        value: h.value || h.marketValue || 0,
+        weight: h.weight || h.portfolioPercent || 0,
+        lastWeight: h.lastWeight || h.previousWeight || 0,
+        changeInWeight: h.changeInWeight || 0,
+        changeInWeightPercentage: h.changeInWeightPercentage || 0,
+        sharesNumber: h.sharesNumber || h.shares || 0,
+        lastSharesNumber: h.lastSharesNumber || h.previousShares || 0,
+        changeInSharesNumber: h.changeInSharesNumber || 0,
+        changeInSharesNumberPercentage: h.changeInSharesNumberPercentage || 0,
+        isNew: h.isNew || false,
+        isSoldOut: h.isSoldOut || false,
+      }));
+      save(join(DATA_DIR, "guru-buffett.json"), mapped);
+      console.log(`  Buffett: ${mapped.length} holdings saved`);
+      hasData = true;
+    } else {
+      console.warn("  Buffett: No holdings data returned");
+    }
+  } catch (e) {
+    console.warn(`  Buffett 13F: SKIP (${e.message})`);
+  }
+
+  // 6. Pelosi 의회 거래 데이터
+  console.log("Fetching Pelosi house trades...");
+  try {
+    const data = await fetchJson(
+      `${BASE}/house-trades-by-name?name=Nancy+Pelosi&apikey=${API_KEY}`
+    );
+    const trades = Array.isArray(data) ? data : [];
+    if (trades.length > 0) {
+      const mapped = trades.map((t) => ({
+        symbol: t.symbol || t.ticker || "",
+        disclosureDate: t.disclosureDate || "",
+        transactionDate: t.transactionDate || "",
+        firstName: t.firstName || "Nancy",
+        lastName: t.lastName || "Pelosi",
+        office: t.office || "House",
+        owner: t.owner || "",
+        type: t.type || t.transactionType || "",
+        amount: t.amount || "",
+        link: t.link || t.ptrLink || "",
+      }));
+      save(join(DATA_DIR, "guru-pelosi.json"), mapped);
+      console.log(`  Pelosi: ${mapped.length} trades saved`);
+      hasData = true;
+    } else {
+      console.warn("  Pelosi: No trades data returned");
+    }
+  } catch (e) {
+    console.warn(`  Pelosi trades: SKIP (${e.message})`);
+  }
+
+  // 7. 한국 주식 데이터
+  console.log("Fetching Korean stocks...");
+  const krStocks = [];
+  const allKrSymbols = [...KR_KOSPI_SYMBOLS, ...KR_KOSDAQ_SYMBOLS];
+
+  for (const fmpSymbol of allKrSymbols) {
+    try {
+      const data = await fetchJson(`${BASE}/quote?symbol=${encodeURIComponent(fmpSymbol)}&apikey=${API_KEY}`);
+      const q = Array.isArray(data) ? data[0] : data;
+      if (q && q.price) {
+        // 심볼에서 .KS/.KQ 제거, exchange 결정
+        const cleanSymbol = fmpSymbol.replace(/\.(KS|KQ)$/, "");
+        const exchange = fmpSymbol.endsWith(".KS") ? "KOSPI" : "KOSDAQ";
+        krStocks.push({
+          symbol: cleanSymbol,
+          name: q.name || cleanSymbol,
+          price: q.price,
+          changesPercentage: q.changePercentage ?? q.changesPercentage ?? 0,
+          change: q.change ?? 0,
+          dayLow: q.dayLow ?? 0,
+          dayHigh: q.dayHigh ?? 0,
+          yearHigh: q.yearHigh ?? 0,
+          yearLow: q.yearLow ?? 0,
+          marketCap: q.marketCap ?? 0,
+          priceAvg50: q.priceAvg50 ?? 0,
+          priceAvg200: q.priceAvg200 ?? 0,
+          volume: q.volume ?? 0,
+          avgVolume: q.avgVolume ?? 0,
+          exchange,
+          open: q.open ?? 0,
+          previousClose: q.previousClose ?? 0,
+          eps: q.eps ?? 0,
+          pe: q.pe ?? 0,
+          sharesOutstanding: q.sharesOutstanding ?? 0,
+          timestamp: q.timestamp ?? 0,
+        });
+        console.log(`  ${fmpSymbol}: OK`);
+      }
+    } catch (e) {
+      console.warn(`  ${fmpSymbol}: SKIP (${e.message})`);
+    }
+    await delay(300);
+  }
+
+  if (krStocks.length > 0) {
+    save(join(DATA_DIR, "kr-stocks.json"), krStocks);
+    console.log(`  ${krStocks.length} Korean stocks saved`);
+    hasData = true;
+  } else {
+    console.warn("  Korean stocks: No data fetched (FMP may not support .KS/.KQ symbols)");
   }
 
   if (!hasData) {
