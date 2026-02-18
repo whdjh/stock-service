@@ -17,7 +17,7 @@ if (!API_KEY) {
 
 async function fetchJson(url) {
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  if (!res.ok) throw new Error(`${res.status}`);
   return res.json();
 }
 
@@ -26,114 +26,138 @@ function save(filePath, data) {
   console.log(`Saved: ${filePath}`);
 }
 
-// US Top 30 symbols
 const US_SYMBOLS = [
   "AAPL","MSFT","NVDA","GOOGL","AMZN","META","BRK-B","TSLA","UNH","LLY",
   "JPM","XOM","V","JNJ","PG","MA","AVGO","HD","MRK","COST",
   "ABBV","PEP","KO","ADBE","CRM","WMT","BAC","NFLX","TMO","AMD",
 ];
 
-const INDEX_SYMBOLS = "^IXIC,^NYA,^KS11,^KQ11,^GSPC";
-const FX_SYMBOLS = "USDKRW";
-const COMMODITY_SYMBOLS = "GCUSD,SIUSD";
-
 async function main() {
   mkdirSync(HIST_DIR, { recursive: true });
+  let hasData = false;
 
-  // 1. Market indexes + forex + commodities
+  // 1. Market indexes + forex + commodities (무료 플랜에서 실패할 수 있음)
   console.log("Fetching market indexes...");
-  const allQuoteSymbols = `${INDEX_SYMBOLS},${FX_SYMBOLS},${COMMODITY_SYMBOLS}`;
-  const indexQuotes = await fetchJson(`${BASE}/quote/${allQuoteSymbols}?apikey=${API_KEY}`);
+  try {
+    const indexes = [];
+    const extras = [];
 
-  const indexes = indexQuotes
-    .filter((q) => q.symbol.startsWith("^"))
-    .map((q) => ({
-      symbol: q.symbol,
-      name: q.name || q.symbol,
-      price: q.price,
-      changesPercentage: q.changesPercentage,
-      change: q.change,
-    }));
+    // 지수 개별 fetch (batch가 막힐 수 있으므로)
+    for (const sym of ["^GSPC", "^IXIC", "^NYA", "^KS11", "^KQ11"]) {
+      try {
+        const [q] = await fetchJson(`${BASE}/quote/${encodeURIComponent(sym)}?apikey=${API_KEY}`);
+        if (q) indexes.push({ symbol: q.symbol, name: q.name || q.symbol, price: q.price, changesPercentage: q.changesPercentage, change: q.change });
+        console.log(`  Index ${sym}: OK`);
+      } catch (e) {
+        console.warn(`  Index ${sym}: SKIP (${e.message})`);
+      }
+    }
 
-  const extras = indexQuotes
-    .filter((q) => !q.symbol.startsWith("^"))
-    .map((q) => ({
-      pair: q.symbol,
-      name: q.name || q.symbol,
-      rate: q.price,
-      change: q.change,
-      changesPercentage: q.changesPercentage,
-    }));
+    // 환율
+    try {
+      const [q] = await fetchJson(`${BASE}/quote/USDKRW?apikey=${API_KEY}`);
+      if (q) extras.push({ pair: "USD/KRW", name: "달러/원", rate: q.price, change: q.change, changesPercentage: q.changesPercentage });
+      console.log("  Forex USDKRW: OK");
+    } catch (e) {
+      console.warn(`  Forex USDKRW: SKIP (${e.message})`);
+    }
 
-  save(join(DATA_DIR, "market-indexes.json"), { indexes, extras });
+    // 금/은
+    for (const [sym, name] of [["GCUSD", "금 (oz)"], ["SIUSD", "은 (oz)"]]) {
+      try {
+        const [q] = await fetchJson(`${BASE}/quote/${sym}?apikey=${API_KEY}`);
+        if (q) extras.push({ pair: q.symbol, name, rate: q.price, change: q.change, changesPercentage: q.changesPercentage });
+        console.log(`  Commodity ${sym}: OK`);
+      } catch (e) {
+        console.warn(`  Commodity ${sym}: SKIP (${e.message})`);
+      }
+    }
+
+    if (indexes.length > 0 || extras.length > 0) {
+      save(join(DATA_DIR, "market-indexes.json"), { indexes, extras });
+      hasData = true;
+    }
+  } catch (e) {
+    console.warn(`Market indexes failed: ${e.message}`);
+  }
 
   // 2. US stock quotes
   console.log("Fetching US stock quotes...");
-  const usQuotes = await fetchJson(`${BASE}/quote/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
-  const usStocks = usQuotes.map((q) => ({
-    symbol: q.symbol,
-    name: q.name,
-    price: q.price,
-    changesPercentage: q.changesPercentage,
-    change: q.change,
-    dayLow: q.dayLow,
-    dayHigh: q.dayHigh,
-    yearHigh: q.yearHigh,
-    yearLow: q.yearLow,
-    marketCap: q.marketCap,
-    priceAvg50: q.priceAvg50,
-    priceAvg200: q.priceAvg200,
-    volume: q.volume,
-    avgVolume: q.avgVolume,
-    exchange: q.exchange,
-    open: q.open,
-    previousClose: q.previousClose,
-    eps: q.eps,
-    pe: q.pe,
-    sharesOutstanding: q.sharesOutstanding,
-    timestamp: q.timestamp,
-  }));
-  save(join(DATA_DIR, "us-stocks.json"), usStocks);
+  try {
+    const usQuotes = await fetchJson(`${BASE}/quote/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
+    const usStocks = usQuotes.map((q) => ({
+      symbol: q.symbol,
+      name: q.name,
+      price: q.price,
+      changesPercentage: q.changesPercentage,
+      change: q.change,
+      dayLow: q.dayLow,
+      dayHigh: q.dayHigh,
+      yearHigh: q.yearHigh,
+      yearLow: q.yearLow,
+      marketCap: q.marketCap,
+      priceAvg50: q.priceAvg50,
+      priceAvg200: q.priceAvg200,
+      volume: q.volume,
+      avgVolume: q.avgVolume,
+      exchange: q.exchange,
+      open: q.open,
+      previousClose: q.previousClose,
+      eps: q.eps,
+      pe: q.pe,
+      sharesOutstanding: q.sharesOutstanding,
+      timestamp: q.timestamp,
+    }));
+    save(join(DATA_DIR, "us-stocks.json"), usStocks);
+    hasData = true;
+  } catch (e) {
+    console.error(`US stocks FAILED: ${e.message}`);
+  }
 
   // 3. Company profiles
   console.log("Fetching company profiles...");
-  const profilesArr = await fetchJson(`${BASE}/profile/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
-  const profiles = {};
-  for (const p of profilesArr) {
-    profiles[p.symbol] = {
-      symbol: p.symbol,
-      name: p.companyName,
-      companyName: p.companyName,
-      price: p.price,
-      change: p.changes,
-      changesPercentage: parseFloat(p.changesPercentage) || 0,
-      marketCap: p.mktCap,
-      pe: p.pe || 0,
-      pbr: p.pb || 0,
-      dividend: p.lastDiv || 0,
-      sector: p.sector,
-      industry: p.industry,
-      ceo: p.ceo,
-      description: p.description,
-      exchange: p.exchangeShortName,
-      website: p.website,
-      image: p.image,
-      dayLow: 0,
-      dayHigh: 0,
-      yearHigh: p.range ? parseFloat(p.range.split("-")[1]) : 0,
-      yearLow: p.range ? parseFloat(p.range.split("-")[0]) : 0,
-      priceAvg50: 0,
-      priceAvg200: 0,
-      volume: p.volAvg,
-      avgVolume: p.volAvg,
-      open: 0,
-      previousClose: 0,
-      eps: 0,
-      sharesOutstanding: 0,
-      timestamp: 0,
-    };
+  try {
+    const profilesArr = await fetchJson(`${BASE}/profile/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
+    const profiles = {};
+    for (const p of profilesArr) {
+      profiles[p.symbol] = {
+        symbol: p.symbol,
+        name: p.companyName,
+        companyName: p.companyName,
+        price: p.price,
+        change: p.changes,
+        changesPercentage: parseFloat(p.changesPercentage) || 0,
+        marketCap: p.mktCap,
+        pe: p.pe || 0,
+        pbr: p.pb || 0,
+        dividend: p.lastDiv || 0,
+        sector: p.sector,
+        industry: p.industry,
+        ceo: p.ceo,
+        description: p.description,
+        exchange: p.exchangeShortName,
+        website: p.website,
+        image: p.image,
+        dayLow: 0,
+        dayHigh: 0,
+        yearHigh: p.range ? parseFloat(p.range.split("-")[1]) : 0,
+        yearLow: p.range ? parseFloat(p.range.split("-")[0]) : 0,
+        priceAvg50: 0,
+        priceAvg200: 0,
+        volume: p.volAvg,
+        avgVolume: p.volAvg,
+        open: 0,
+        previousClose: 0,
+        eps: 0,
+        sharesOutstanding: 0,
+        timestamp: 0,
+      };
+    }
+    save(join(DATA_DIR, "profiles.json"), profiles);
+    hasData = true;
+  } catch (e) {
+    console.error(`Profiles FAILED: ${e.message}`);
   }
-  save(join(DATA_DIR, "profiles.json"), profiles);
 
   // 4. Historical prices (1 year)
   console.log("Fetching historical prices...");
@@ -149,8 +173,13 @@ async function main() {
       save(join(HIST_DIR, `${symbol}.json`), hist);
       console.log(`  ${symbol}: ${hist.historical?.length || 0} days`);
     } catch (e) {
-      console.error(`  ${symbol}: FAILED - ${e.message}`);
+      console.error(`  ${symbol}: FAILED (${e.message})`);
     }
+  }
+
+  if (!hasData) {
+    console.error("No data was fetched. Check API key and plan limits.");
+    process.exit(1);
   }
 
   console.log("Done!");
