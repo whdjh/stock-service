@@ -55,7 +55,7 @@ export default function GuruDetailPage() {
         {t("common.back")}
       </Link>
 
-      <div className="bg-surface rounded-3xl p-6">
+      <div className="bg-surface rounded-3xl p-6 shadow-plastic">
         <div className="flex items-start gap-4">
           <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
             <Icon size={28} className="text-muted" />
@@ -73,7 +73,7 @@ export default function GuruDetailPage() {
         </div>
       </div>
 
-      <div className="bg-surface rounded-3xl p-6">
+      <div className="bg-surface rounded-3xl p-6 shadow-plastic">
         <h2 className="text-lg font-semibold text-foreground mb-4">
           {t("guruDetail.topHoldings")}
         </h2>
@@ -119,7 +119,7 @@ export default function GuruDetailPage() {
       </div>
 
       {recentActivity.length > 0 && (
-        <div className="bg-surface rounded-3xl p-6">
+        <div className="bg-surface rounded-3xl p-6 shadow-plastic">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             {t("guruDetail.recentActivity")}
           </h2>
@@ -166,7 +166,7 @@ export default function GuruDetailPage() {
       )}
 
       {guru.trades && guru.trades.length > 0 && (
-        <div className="bg-surface rounded-3xl p-6">
+        <div className="bg-surface rounded-3xl p-6 shadow-plastic">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             {t("guruDetail.congressTrades")}
           </h2>

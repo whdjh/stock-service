@@ -11,7 +11,7 @@ interface CardProps {
 function Card({ title, description, children, className = "", onClick }: CardProps) {
   const clickable = onClick ? "cursor-pointer hover:shadow-md transition-shadow" : "";
   return (
-    <div className={`bg-surface rounded-3xl p-5 ${clickable} ${className}`} onClick={onClick}>
+    <div className={`bg-surface rounded-3xl p-5 shadow-plastic ${clickable} ${className}`} onClick={onClick}>
       {children ?? (
         <>
           {title && <h3 className="text-lg font-semibold text-foreground">{title}</h3>}

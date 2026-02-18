@@ -13,6 +13,9 @@ const config: Config = {
         foreground: "#191F28",
         muted: "#8B95A1",
       },
+      boxShadow: {
+        plastic: "0 2px 1px rgba(255,255,255,1), 0 -2px 1px rgba(0,0,0,0.1)",
+      },
     },
   },
   plugins: [],

@@ -41,7 +41,7 @@ export default function StockMetrics({ profile }: StockMetricsProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {metrics.map(({ label, key, format }) => (
-        <div key={key} className="bg-surface rounded-2xl p-4">
+        <div key={key} className="bg-surface rounded-2xl p-4 shadow-plastic">
           <p className="text-xs text-muted mb-1">{label}</p>
           <p className="text-base font-semibold text-foreground">
             {format(profile[key])}

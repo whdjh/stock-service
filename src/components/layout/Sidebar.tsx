@@ -9,7 +9,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6 lg:self-start">
-      <div className="bg-surface rounded-3xl p-5">
+      <div className="bg-surface rounded-3xl p-5 shadow-plastic">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <TrendingUp size={20} className="text-foreground" />

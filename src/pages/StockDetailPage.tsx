@@ -38,7 +38,7 @@ export default function StockDetailPage() {
         {t("common.back")}
       </Link>
 
-      <div className="bg-surface rounded-3xl p-6">
+      <div className="bg-surface rounded-3xl p-6 shadow-plastic">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
@@ -76,7 +76,7 @@ export default function StockDetailPage() {
       <StockMetrics profile={profile} />
 
       {gurusHoldingStock.length > 0 && (
-        <div className="bg-surface rounded-3xl p-6">
+        <div className="bg-surface rounded-3xl p-6 shadow-plastic">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             {t("stockDetail.guruChoice")}
           </h2>
@@ -116,7 +116,7 @@ export default function StockDetailPage() {
         </div>
       )}
 
-      <div className="bg-surface rounded-3xl p-6">
+      <div className="bg-surface rounded-3xl p-6 shadow-plastic">
         <h2 className="text-lg font-semibold text-foreground mb-4">
           {t("stockDetail.companyInfo")}
         </h2>
