@@ -15,7 +15,7 @@ export default function Tooltip({ text }: TooltipProps) {
     if (!iconRef.current) return;
     const rect = iconRef.current.getBoundingClientRect();
     setPos({
-      top: rect.top + window.scrollY,
+      top: rect.top,
       left: rect.left + rect.width / 2,
     });
     setVisible(true);
