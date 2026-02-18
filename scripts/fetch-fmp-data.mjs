@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "public", "data");
 const HIST_DIR = join(DATA_DIR, "historical");
 const API_KEY = process.env.FMP_API_KEY;
-const BASE = "https://financialmodelingprep.com/api/v3";
+const BASE = "https://financialmodelingprep.com/stable";
 
 if (!API_KEY) {
   console.error("FMP_API_KEY environment variable is required");
@@ -36,16 +36,16 @@ async function main() {
   mkdirSync(HIST_DIR, { recursive: true });
   let hasData = false;
 
-  // 1. Market indexes + forex + commodities (무료 플랜에서 실패할 수 있음)
+  // 1. Market indexes + forex + commodities
   console.log("Fetching market indexes...");
   try {
     const indexes = [];
     const extras = [];
 
-    // 지수 개별 fetch (batch가 막힐 수 있으므로)
     for (const sym of ["^GSPC", "^IXIC", "^NYA", "^KS11", "^KQ11"]) {
       try {
-        const [q] = await fetchJson(`${BASE}/quote/${encodeURIComponent(sym)}?apikey=${API_KEY}`);
+        const data = await fetchJson(`${BASE}/quote?symbol=${encodeURIComponent(sym)}&apikey=${API_KEY}`);
+        const q = Array.isArray(data) ? data[0] : data;
         if (q) indexes.push({ symbol: q.symbol, name: q.name || q.symbol, price: q.price, changesPercentage: q.changesPercentage, change: q.change });
         console.log(`  Index ${sym}: OK`);
       } catch (e) {
@@ -53,19 +53,19 @@ async function main() {
       }
     }
 
-    // 환율
     try {
-      const [q] = await fetchJson(`${BASE}/quote/USDKRW?apikey=${API_KEY}`);
+      const data = await fetchJson(`${BASE}/quote?symbol=USDKRW&apikey=${API_KEY}`);
+      const q = Array.isArray(data) ? data[0] : data;
       if (q) extras.push({ pair: "USD/KRW", name: "달러/원", rate: q.price, change: q.change, changesPercentage: q.changesPercentage });
       console.log("  Forex USDKRW: OK");
     } catch (e) {
       console.warn(`  Forex USDKRW: SKIP (${e.message})`);
     }
 
-    // 금/은
     for (const [sym, name] of [["GCUSD", "금 (oz)"], ["SIUSD", "은 (oz)"]]) {
       try {
-        const [q] = await fetchJson(`${BASE}/quote/${sym}?apikey=${API_KEY}`);
+        const data = await fetchJson(`${BASE}/quote?symbol=${sym}&apikey=${API_KEY}`);
+        const q = Array.isArray(data) ? data[0] : data;
         if (q) extras.push({ pair: q.symbol, name, rate: q.price, change: q.change, changesPercentage: q.changesPercentage });
         console.log(`  Commodity ${sym}: OK`);
       } catch (e) {
@@ -84,7 +84,8 @@ async function main() {
   // 2. US stock quotes
   console.log("Fetching US stock quotes...");
   try {
-    const usQuotes = await fetchJson(`${BASE}/quote/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
+    const data = await fetchJson(`${BASE}/quote?symbol=${US_SYMBOLS.join(",")}&apikey=${API_KEY}`);
+    const usQuotes = Array.isArray(data) ? data : [data];
     const usStocks = usQuotes.map((q) => ({
       symbol: q.symbol,
       name: q.name,
@@ -117,7 +118,8 @@ async function main() {
   // 3. Company profiles
   console.log("Fetching company profiles...");
   try {
-    const profilesArr = await fetchJson(`${BASE}/profile/${US_SYMBOLS.join(",")}?apikey=${API_KEY}`);
+    const data = await fetchJson(`${BASE}/profile?symbol=${US_SYMBOLS.join(",")}&apikey=${API_KEY}`);
+    const profilesArr = Array.isArray(data) ? data : [data];
     const profiles = {};
     for (const p of profilesArr) {
       profiles[p.symbol] = {
@@ -168,10 +170,11 @@ async function main() {
   for (const symbol of US_SYMBOLS) {
     try {
       const hist = await fetchJson(
-        `${BASE}/historical-price-full/${symbol}?from=${fromDate}&apikey=${API_KEY}`
+        `${BASE}/historical-price-full?symbol=${symbol}&from=${fromDate}&apikey=${API_KEY}`
       );
       save(join(HIST_DIR, `${symbol}.json`), hist);
-      console.log(`  ${symbol}: ${hist.historical?.length || 0} days`);
+      const count = Array.isArray(hist) ? hist.length : hist.historical?.length || 0;
+      console.log(`  ${symbol}: ${count} days`);
     } catch (e) {
       console.error(`  ${symbol}: FAILED (${e.message})`);
     }
