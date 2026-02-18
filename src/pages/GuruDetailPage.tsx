@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { Link, useParams, Navigate } from "react-router-dom";
 import {
   ArrowLeft,
   Building2,
@@ -10,12 +9,8 @@ import {
   ArrowDownCircle,
 } from "lucide-react";
 import { getGuruById } from "@/data/mock";
-import { getTranslations } from "next-intl/server";
+import { useTranslation } from "react-i18next";
 import Badge from "@/components/ui/Badge";
-
-interface GuruDetailPageProps {
-  params: Promise<{ id: string }>;
-}
 
 const guruIcons = {
   institutional: Building2,
@@ -29,42 +24,37 @@ function formatValue(value: number): string {
   return `$${value.toLocaleString()}`;
 }
 
-export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
-  const { id } = await params;
-  const t = await getTranslations();
-  const guru = getGuruById(id);
+export default function GuruDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
+  const guru = id ? getGuruById(id) : undefined;
 
   if (!guru) {
-    notFound();
+    return <Navigate to="/" replace />;
   }
 
   const Icon = guruIcons[guru.type] ?? Building2;
 
-  // Top 10 holdings by weight
   const topHoldings = [...guru.holdings]
     .sort((a, b) => b.weight - a.weight)
     .slice(0, 10);
 
-  // Recent activity: holdings with non-zero changeInSharesNumberPercentage
   const recentActivity = guru.holdings.filter(
     (h) => h.changeInSharesNumberPercentage !== 0
   );
 
-  // Max weight for progress bar scaling
   const maxWeight = topHoldings.length > 0 ? topHoldings[0].weight : 100;
 
   return (
     <div className="space-y-6">
-      {/* Back link */}
       <Link
-        href="/"
+        to="/"
         className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
       >
         <ArrowLeft size={16} />
         {t("common.back")}
       </Link>
 
-      {/* Guru Profile Card */}
       <div className="bg-surface rounded-3xl p-6">
         <div className="flex items-start gap-4">
           <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -83,7 +73,6 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
         </div>
       </div>
 
-      {/* Top Holdings */}
       <div className="bg-surface rounded-3xl p-6">
         <h2 className="text-lg font-semibold text-foreground mb-4">
           {t("guruDetail.topHoldings")}
@@ -92,7 +81,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
           {topHoldings.map((holding, i) => (
             <Link
               key={holding.symbol}
-              href={`/stock/${holding.symbol}`}
+              to={`/stock/${holding.symbol}`}
               className="block py-3 px-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
@@ -116,7 +105,6 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
                   </p>
                 </div>
               </div>
-              {/* Progress bar */}
               <div className="w-full bg-gray-200 rounded-full h-1.5">
                 <div
                   className="bg-foreground rounded-full h-1.5 transition-all"
@@ -130,7 +118,6 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
         </div>
       </div>
 
-      {/* Recent Activity */}
       {recentActivity.length > 0 && (
         <div className="bg-surface rounded-3xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
@@ -142,7 +129,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
               return (
                 <Link
                   key={holding.symbol}
-                  href={`/stock/${holding.symbol}`}
+                  to={`/stock/${holding.symbol}`}
                   className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-3">
@@ -178,7 +165,6 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
         </div>
       )}
 
-      {/* Congress Trades (only for congress type with trades) */}
       {guru.trades && guru.trades.length > 0 && (
         <div className="bg-surface rounded-3xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
@@ -195,7 +181,7 @@ export default async function GuruDetailPage({ params }: GuruDetailPageProps) {
               return (
                 <Link
                   key={`${trade.symbol}-${trade.transactionDate}-${i}`}
-                  href={`/stock/${trade.symbol}`}
+                  to={`/stock/${trade.symbol}`}
                   className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-3">

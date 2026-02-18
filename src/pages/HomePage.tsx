@@ -1,12 +1,12 @@
 import { gurus, usStocks, krStocks, kosdaqStocks, usSectors, krSectors } from "@/data/mock";
-import { getTranslations } from "next-intl/server";
+import { useTranslation } from "react-i18next";
 import GuruCard from "@/components/guru/GuruCard";
 import RankingList from "@/components/stock/RankingList";
 import SectorTabs from "@/components/sector/SectorTabs";
 import { Wallet, Trophy, BarChart3 } from "lucide-react";
 
-export default async function Home() {
-  const t = await getTranslations();
+export default function HomePage() {
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-8">

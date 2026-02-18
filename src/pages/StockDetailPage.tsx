@@ -1,21 +1,16 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, TrendingUp, TrendingDown, Building2, Landmark } from "lucide-react";
 import { getCompanyProfile, guruDetails, gurus } from "@/data/mock";
-import { getTranslations } from "next-intl/server";
+import { useTranslation } from "react-i18next";
 import StockMetrics from "@/components/stock/StockMetrics";
 
-interface StockDetailPageProps {
-  params: Promise<{ ticker: string }>;
-}
-
-export default async function StockDetailPage({ params }: StockDetailPageProps) {
-  const { ticker } = await params;
-  const t = await getTranslations();
-  const profile = getCompanyProfile(ticker);
+export default function StockDetailPage() {
+  const { ticker } = useParams<{ ticker: string }>();
+  const { t } = useTranslation();
+  const profile = ticker ? getCompanyProfile(ticker) : undefined;
 
   if (!profile) {
-    notFound();
+    return <Navigate to="/" replace />;
   }
 
   const isKR = profile.exchange === "KRX";
@@ -23,7 +18,6 @@ export default async function StockDetailPage({ params }: StockDetailPageProps) 
   const isUp = profile.changesPercentage > 0;
   const isDown = profile.changesPercentage < 0;
 
-  // Find which gurus hold this stock
   const gurusHoldingStock = gurus
     .map((guru) => {
       const detail = guruDetails[guru.id];
@@ -36,16 +30,14 @@ export default async function StockDetailPage({ params }: StockDetailPageProps) 
 
   return (
     <div className="space-y-6">
-      {/* Back link */}
       <Link
-        href="/"
+        to="/"
         className="inline-flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
       >
         <ArrowLeft size={16} />
         {t("common.back")}
       </Link>
 
-      {/* Stock Header */}
       <div className="bg-surface rounded-3xl p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -81,10 +73,8 @@ export default async function StockDetailPage({ params }: StockDetailPageProps) 
         </div>
       </div>
 
-      {/* Key Metrics */}
       <StockMetrics profile={profile} />
 
-      {/* Guru's Pick */}
       {gurusHoldingStock.length > 0 && (
         <div className="bg-surface rounded-3xl p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
@@ -96,7 +86,7 @@ export default async function StockDetailPage({ params }: StockDetailPageProps) 
               return (
                 <Link
                   key={guru.id}
-                  href={`/guru/${guru.id}`}
+                  to={`/guru/${guru.id}`}
                   className="flex items-center justify-between py-3 px-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-3">
@@ -126,7 +116,6 @@ export default async function StockDetailPage({ params }: StockDetailPageProps) 
         </div>
       )}
 
-      {/* Company Info */}
       <div className="bg-surface rounded-3xl p-6">
         <h2 className="text-lg font-semibold text-foreground mb-4">
           {t("stockDetail.companyInfo")}
