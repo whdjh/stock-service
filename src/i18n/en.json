@@ -1,0 +1,85 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "back": "Back to Dashboard",
+    "us": "US",
+    "kr": "Korea",
+    "all": "All",
+    "buy": "Buy",
+    "sell": "Sell",
+    "partialSell": "Partial Sell",
+    "fullSell": "Full Sell",
+    "perYear": "/yr",
+    "weight": "Weight",
+    "shares": "shares",
+    "sector": "Sector",
+    "industry": "Industry",
+    "exchange": "Exchange"
+  },
+  "sidebar": {
+    "title": "Today's Market"
+  },
+  "gurus": {
+    "title": "Guru's Wallet"
+  },
+  "ranking": {
+    "title": "Market Cap Ranking"
+  },
+  "sectors": {
+    "title": "Sector Ranking",
+    "informationTechnology": "IT",
+    "healthCare": "Healthcare",
+    "financials": "Financials",
+    "consumerDiscretionary": "Consumer Disc.",
+    "communicationServices": "Communication",
+    "industrials": "Industrials",
+    "consumerStaples": "Consumer Staples",
+    "energy": "Energy",
+    "materials": "Materials",
+    "utilities": "Utilities",
+    "realEstate": "Real Estate"
+  },
+  "stockDetail": {
+    "guruChoice": "Guru's Pick",
+    "companyInfo": "Company Info",
+    "marketCap": "Market Cap",
+    "per": "PER",
+    "pbr": "PBR",
+    "dividendYield": "Dividend Yield"
+  },
+  "guruDetail": {
+    "topHoldings": "Top Holdings",
+    "recentActivity": "Recent Activity",
+    "congressTrades": "Congress Trades"
+  },
+  "metadata": {
+    "title": "Stock Service",
+    "description": "Track guru portfolios and market trends at a glance"
+  },
+  "tooltip": {
+    "exchange": {
+      "NASDAQ": "The heart of global tech and innovation.\nLed by big tech companies, it reflects tech stock trends first.",
+      "NYSE": "World's largest traditional stock exchange.\nFocused on proven blue-chip stocks in finance, energy, etc.",
+      "KOSPI": "Korea's main market of leading corporations.\nRelatively stable with less volatility; driven by institutional and foreign investor flows.",
+      "KOSDAQ": "Korea's venture/tech growth market.\nSmall-to-mid cap companies with high growth potential; a high-risk, high-return market."
+    },
+    "index": {
+      "^IXIC": "NASDAQ Composite Index.\nThe key indicator of overall US tech stock trends.",
+      "^KS11": "KOSPI Index.\nReflects the overall trend of Korea's large-cap market.",
+      "^KQ11": "KOSDAQ Index.\nReflects the trend of Korea's tech and growth market."
+    },
+    "sector": {
+      "informationTechnology": "Semiconductors, software, IT services\nThe core industry driving tech innovation, sensitive to AI and cloud trends.",
+      "healthCare": "Pharma, biotech, medical devices\nHuge upside from drug breakthroughs, but high failure risk. Essential in an aging society.",
+      "financials": "Banks, insurance, securities\nManages capital flows, sensitive to interest rates. Slow growth but high dividends.",
+      "consumerDiscretionary": "Autos, luxury, hotels\nThrives when the economy booms, first to suffer in downturns.",
+      "communicationServices": "Telecom, media, entertainment\nContent and platforms are key, generating revenue through digital ads and subscriptions.",
+      "industrials": "Construction, machinery, aerospace, defense\nStrong during economic recovery, influenced by infrastructure spending and defense budgets.",
+      "consumerStaples": "Food, beverages, household goods\nSteady demand regardless of economy, popular as a defensive investment with stable dividends.",
+      "energy": "Oil, gas, renewables\nStock prices swing heavily with oil prices. Green transition trends are also key.",
+      "materials": "Chemicals, steel, metals\nProduces raw materials for manufacturing, tends to rally first during economic recovery.",
+      "utilities": "Electric, gas, water\nMonopolistic structure with stable revenue and high dividends, but low growth potential.",
+      "realEstate": "REITs, building leases\nOwns property and earns rental income. Favored when rates drop; many offer monthly dividends."
+    }
+  }
+}

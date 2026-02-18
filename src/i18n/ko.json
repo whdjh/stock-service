@@ -1,0 +1,85 @@
+{
+  "common": {
+    "dashboard": "대시보드",
+    "back": "대시보드로 돌아가기",
+    "us": "미국",
+    "kr": "한국",
+    "all": "전체",
+    "buy": "매수",
+    "sell": "매도",
+    "partialSell": "일부 매도",
+    "fullSell": "전량 매도",
+    "perYear": "/yr",
+    "weight": "비중",
+    "shares": "주",
+    "sector": "섹터",
+    "industry": "산업",
+    "exchange": "거래소"
+  },
+  "sidebar": {
+    "title": "오늘의 시장"
+  },
+  "gurus": {
+    "title": "고수들의 지갑"
+  },
+  "ranking": {
+    "title": "시총 Top 30"
+  },
+  "sectors": {
+    "title": "섹터별 순위",
+    "informationTechnology": "정보기술",
+    "healthCare": "헬스케어",
+    "financials": "금융",
+    "consumerDiscretionary": "경기소비재",
+    "communicationServices": "커뮤니케이션",
+    "industrials": "산업재",
+    "consumerStaples": "필수소비재",
+    "energy": "에너지",
+    "materials": "소재",
+    "utilities": "유틸리티",
+    "realEstate": "부동산"
+  },
+  "stockDetail": {
+    "guruChoice": "고수의 선택",
+    "companyInfo": "기업 정보",
+    "marketCap": "시가총액",
+    "per": "PER",
+    "pbr": "PBR",
+    "dividendYield": "배당수익률"
+  },
+  "guruDetail": {
+    "topHoldings": "Top Holdings",
+    "recentActivity": "최근 활동",
+    "congressTrades": "의회 거래 내역"
+  },
+  "metadata": {
+    "title": "Stock Service",
+    "description": "고수들의 포트폴리오와 시장 동향을 한눈에"
+  },
+  "tooltip": {
+    "exchange": {
+      "NASDAQ": "전 세계 기술과 혁신의 심장.\n빅테크 기업들이 주도하며, 기술주 흐름을 가장 먼저 반영하는 시장입니다.",
+      "NYSE": "세계 최대 전통 증권거래소.\n금융, 에너지 등 검증된 대형 우량주 중심이며, 안정적인 투자처로 꼽힙니다.",
+      "KOSPI": "대한민국 경제를 이끄는 대기업들의 모임.\n주가 변동이 상대적으로 적고 안정적이며, 외국인·기관 수급이 주가를 좌우합니다.",
+      "KOSDAQ": "높은 성장을 꿈꾸는 벤처/기술 기업 시장.\n미래 성장성이 높은 중소형 기업 위주로, 등락 폭이 큰 하이리스크-하이리턴 시장입니다."
+    },
+    "index": {
+      "^IXIC": "나스닥 종합지수.\n미국 기술주 전체 흐름을 보여주는 대표 지표입니다.",
+      "^KS11": "코스피 지수.\n한국 대형주 시장의 전체 흐름을 반영합니다.",
+      "^KQ11": "코스닥 지수.\n한국 기술·성장주 시장의 흐름을 반영합니다."
+    },
+    "sector": {
+      "informationTechnology": "반도체, 소프트웨어, IT 서비스\n기술 혁신을 이끄는 핵심 산업으로, AI·클라우드 등 트렌드에 민감합니다.",
+      "healthCare": "제약, 바이오, 의료기기\n신약 개발 성공 시 큰 수익이 가능하지만 실패 위험도 큽니다. 고령화 시대의 필수 산업.",
+      "financials": "은행, 보험, 증권\n자본의 흐름을 담당하며, 금리 변동에 민감합니다. 성장은 더디지만 배당이 높은 편.",
+      "consumerDiscretionary": "자동차, 명품, 호텔\n경기가 좋을 때 소비가 늘어 실적이 오르고, 불황엔 가장 먼저 줄이는 지출 영역.",
+      "communicationServices": "통신, 미디어, 엔터테인먼트\n콘텐츠와 플랫폼이 핵심이며, 디지털 광고·구독 모델로 수익을 창출합니다.",
+      "industrials": "건설, 기계, 항공, 방산\n경기 회복기에 강세를 보이며, 인프라 투자·국방 예산에 영향을 받습니다.",
+      "consumerStaples": "식품, 음료, 생활용품\n경기와 관계없이 꾸준한 수요가 있어 방어적 투자처로 인기. 배당도 안정적.",
+      "energy": "석유, 가스, 신재생에너지\n국제 유가에 따라 주가가 크게 변동합니다. 친환경 전환 트렌드도 주목.",
+      "materials": "화학, 철강, 금속\n제조업의 기초 원자재를 만들며, 경기 회복기에 가장 먼저 오르는 경향이 있습니다.",
+      "utilities": "전력, 가스, 수도\n독점적 구조로 수익이 안정적이고 배당이 높지만, 성장성은 낮습니다.",
+      "realEstate": "리츠(REITs), 건물 임대\n부동산을 소유하고 임대 수익을 냅니다. 금리 인하 시 유리하며, 월 배당 종목이 많습니다."
+    }
+  }
+}
