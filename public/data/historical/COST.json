@@ -2,6 +2,10 @@
   "symbol": "COST",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 998.43
+    },
+    {
       "date": "2026-02-23",
       "close": 986.02
     },

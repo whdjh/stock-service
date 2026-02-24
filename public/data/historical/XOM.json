@@ -2,6 +2,10 @@
   "symbol": "XOM",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 149.26
+    },
+    {
       "date": "2026-02-23",
       "close": 150.76
     },

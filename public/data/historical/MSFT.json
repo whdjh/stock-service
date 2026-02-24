@@ -2,6 +2,10 @@
   "symbol": "MSFT",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 389
+    },
+    {
       "date": "2026-02-23",
       "close": 384.47
     },

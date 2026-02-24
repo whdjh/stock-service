@@ -2,6 +2,10 @@
   "symbol": "TSLA",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 409.38
+    },
+    {
       "date": "2026-02-23",
       "close": 399.83
     },

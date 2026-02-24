@@ -2,6 +2,10 @@
   "symbol": "ABBV",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 228.44
+    },
+    {
       "date": "2026-02-23",
       "close": 229.48
     },

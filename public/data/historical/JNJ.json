@@ -2,6 +2,10 @@
   "symbol": "JNJ",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 246.28
+    },
+    {
       "date": "2026-02-23",
       "close": 245.84
     },

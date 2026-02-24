@@ -2,6 +2,10 @@
   "symbol": "NVDA",
   "historical": [
     {
+      "date": "2026-02-24",
+      "close": 192.86
+    },
+    {
       "date": "2026-02-23",
       "close": 191.55
     },
