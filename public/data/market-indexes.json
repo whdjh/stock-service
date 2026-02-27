@@ -3,46 +3,46 @@
     {
       "symbol": "^GSPC",
       "name": "S&P 500",
-      "price": 6909.01,
-      "changesPercentage": -0.5344,
-      "change": -37.12
+      "price": 6878.04,
+      "changesPercentage": -0.44609,
+      "change": -30.82
     },
     {
       "symbol": "^IXIC",
       "name": "나스닥",
-      "price": 22878.3832,
-      "changesPercentage": -1.18216,
-      "change": -273.6948
+      "price": 22668.2118,
+      "changesPercentage": -0.91865,
+      "change": -210.1712
     },
     {
       "symbol": "^DJI",
       "name": "다우존스",
-      "price": 49499.21,
-      "changesPercentage": 0.03447708,
-      "change": 17.06
+      "price": 48977.93,
+      "changesPercentage": -1.05309,
+      "change": -521.27
     }
   ],
   "extras": [
     {
       "pair": "USD/JPY",
       "name": "달러/엔",
-      "rate": 156.096,
-      "change": -0.198,
-      "changesPercentage": -0.12668
+      "rate": 156.095,
+      "change": 0.005,
+      "changesPercentage": 0.00320328
     },
     {
       "pair": "GCUSD",
       "name": "금 (oz)",
-      "rate": 5208,
-      "change": -18.2,
-      "changesPercentage": -0.34825
+      "rate": 5293.8,
+      "change": 99.6,
+      "changesPercentage": 1.91752
     },
     {
       "pair": "SIUSD",
       "name": "은 (oz)",
-      "rate": 89.115,
-      "change": -2.515,
-      "changesPercentage": -2.74473
+      "rate": 94.44,
+      "change": 6.856,
+      "changesPercentage": 7.82791
     }
   ]
 }
